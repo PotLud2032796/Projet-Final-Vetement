@@ -64,7 +64,7 @@ namespace Atelier.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VetementId,Nom")] Vetement vetement)
+        public async Task<IActionResult> Create([Bind("VetementId,Nom,Description,DateObtention,Type,Image")] Vetement vetement)
         {
             if (ModelState.IsValid)
             {
@@ -107,8 +107,10 @@ namespace Atelier.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VetementId,Nom")] Vetement vetement)
+        public async Task<IActionResult> Edit(int id, [Bind("VetementId,Nom,Description,DateObtention,Type,Image")] Vetement vetement)
         {
+           
+
             if (id != vetement.VetementId)
             {
                 return NotFound();
@@ -117,6 +119,8 @@ namespace Atelier.Controllers
             var v = await context.Vetement.AsNoTracking().FirstOrDefaultAsync(m => m.VetementId == id);
             var isAuthorized = await AuthorizationService.AuthorizeAsync(
                 User, v, VetementOperations.Update);
+
+            vetement.ProprietaireId = v.ProprietaireId;
 
             if (!isAuthorized.Succeeded)
                 return Forbid();
